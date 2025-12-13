@@ -440,7 +440,9 @@ function App() {
       },
     ] as const;
 
-  useEffect(() => setPage(1), []);
+  useEffect(() => {
+    setPage(1);
+  }, []);
 
   return (
     <>
