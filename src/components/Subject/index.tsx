@@ -123,7 +123,11 @@ const Subject = createOverlay<Props>(
                 display={"grid"}
                 gridTemplateRows={"auto 1fr"}
                 height={"100%"}
-                overflow={isVertical && type === "image" ? "hidden" : "unset"}
+                overflow={
+                  (isVertical && type === "image") || subject.loading
+                    ? "hidden"
+                    : "auto"
+                }
               >
                 {description && (
                   <Dialog.Description textAlign={"center"} direction={"rtl"}>
