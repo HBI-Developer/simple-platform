@@ -512,6 +512,7 @@ function App() {
             <Box height={"100%"} width={"100%"}>
               <Menu
                 items={groups}
+                slidesPerPage={isMobile && isVertical ? 6 : 4}
                 item={({ item }) => (
                   <Box
                     width={{ base: "90%", md: "50%" }}
@@ -594,7 +595,7 @@ function App() {
               <Box h="auto" minH={0}>
                 <Menu
                   items={subjects.filter((s) => s.category === subjectType)}
-                  slidesPerPage={isMobile && !isVertical ? 3 : 4}
+                  slidesPerPage={isMobile ? (isVertical ? 5 : 3) : 4}
                   item={({ item }) => (
                     <Box
                       width={{ base: "90%", md: "50%" }}
