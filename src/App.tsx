@@ -32,6 +32,7 @@ import {
 
 import "./App.css";
 import { Toaster } from "./components/ui/toaster";
+import useScreenState from "./hooks/useScreenState";
 
 const colors = [
   "gray",
@@ -48,7 +49,8 @@ const colors = [
 ] as const;
 
 function App() {
-  const color = useSelector((state: RootState) => state.color.value),
+  const { isMobile, isVertical } = useScreenState(),
+    color = useSelector((state: RootState) => state.color.value),
     scope = useSelector((state: RootState) => state.scope.value),
     [subjectType, setSubjectType] = useState(0),
     [subjectName, setSubjectName] = useState(""),
@@ -512,7 +514,7 @@ function App() {
                 items={groups}
                 item={({ item }) => (
                   <Box
-                    width={{ base: "80%", md: "50%" }}
+                    width={{ base: "90%", md: "50%" }}
                     borderRadius={".5rem"}
                     bg={"#eeeeee10"}
                     cursor={"pointer"}
@@ -592,9 +594,11 @@ function App() {
               <Box h="auto" minH={0}>
                 <Menu
                   items={subjects.filter((s) => s.category === subjectType)}
+                  slidesPerPage={isMobile && !isVertical ? 3 : 4}
                   item={({ item }) => (
                     <Box
-                      width={{ base: "80%", md: "50%" }}
+                      width={{ base: "90%", md: "50%" }}
+                      marginInline={{ base: "auto", md: "0" }}
                       borderRadius={".5rem"}
                       bg={"#eeeeee10"}
                       height={"100%"}
@@ -616,7 +620,12 @@ function App() {
                         alignItems={"center"}
                         height={"100%"}
                       >
-                        <Box p={"1.5rem"} bg="#00000010">
+                        <Flex
+                          paddingInline={"1.5rem"}
+                          alignItems={"center"}
+                          height={"100%"}
+                          bg="#00000010"
+                        >
                           <Icon
                             size={{ base: "md", md: "lg", lg: "xl" }}
                             color={color}
@@ -641,7 +650,7 @@ function App() {
                               }
                             })()}
                           </Icon>
-                        </Box>
+                        </Flex>
                         <Flex
                           alignItems={"center"}
                           padding=".5rem 1rem"

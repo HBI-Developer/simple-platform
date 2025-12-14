@@ -22,7 +22,7 @@ export default function VideoPlayer({ src }: Props) {
       ratio={16 / 9}
       overflow={"hidden"}
       borderRadius={".5rem"}
-      width={{ base: "90%", sm: "75%", md: "65%", lg: "50%" }}
+      width={{ base: "100%", sm: "75%", md: "65%", lg: "50%" }}
       marginInline={"auto"}
     >
       {isPlatform(src) ? (

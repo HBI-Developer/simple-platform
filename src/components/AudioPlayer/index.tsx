@@ -330,7 +330,8 @@ export default function AudioPlayer({ src }: Props) {
     <Box
       ref={containerRef}
       className={styles.container}
-      width={{ base: "90%", md: "65%", lg: "50%" }}
+      width={{ base: "100%", sm: "75%", md: "65%", lg: "50%" }}
+      aspectRatio={16 / 9}
     >
       {!error ? (
         <>

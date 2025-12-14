@@ -1,6 +1,7 @@
 import {
   Box,
   Center,
+  CloseButton,
   createOverlay,
   Dialog,
   Portal,
@@ -15,6 +16,7 @@ import { useEffect } from "react";
 import { setSubjectLoading } from "@/store/slice/subject";
 import Carousel from "../Carousel";
 import SubjectHeader from "../SubjectHeader";
+import useScreenState from "@/hooks/useScreenState";
 
 interface Props {
   title: string;
@@ -28,6 +30,7 @@ const Subject = createOverlay<Props>(
     const color = useSelector((state: RootState) => state.color),
       subject = useSelector((state: RootState) => state.subject),
       dispatch = useDispatch(),
+      { isMobile, isVertical } = useScreenState(),
       onLoad = () => dispatch(setSubjectLoading(false)),
       createSubject = () => {
         switch (type) {
@@ -38,11 +41,7 @@ const Subject = createOverlay<Props>(
           case "pdf": {
             if (typeof resource !== "string") return;
             return (
-              <Box
-                width={{ base: "90%", md: "75%", lg: "50%" }}
-                marginInline={"auto"}
-                height={"90%"}
-              >
+              <Box width={"100%"} marginInline={"auto"} height={"auto"}>
                 <iframe
                   src={resource}
                   width={"100%"}
@@ -56,11 +55,19 @@ const Subject = createOverlay<Props>(
           }
           case "audio": {
             if (typeof resource !== "string") return;
-            return <AudioPlayer src={resource} />;
+            return (
+              <Box>
+                <AudioPlayer src={resource} />
+              </Box>
+            );
           }
           case "video": {
             if (typeof resource !== "string") return;
-            return <VideoPlayer src={resource} />;
+            return (
+              <Box>
+                <VideoPlayer src={resource} />
+              </Box>
+            );
           }
         }
       };
@@ -70,11 +77,13 @@ const Subject = createOverlay<Props>(
     }, []);
 
     return (
-      <Dialog.Root {...rest} size="cover">
+      <Dialog.Root {...rest} size={isMobile ? "full" : "cover"}>
         <Portal>
           <Dialog.Backdrop />
-          <Dialog.Positioner>
-            <Dialog.Content direction="rtl">
+          <Dialog.Positioner
+            overflow={isVertical && type === "image" ? "hidden" : "auto"}
+          >
+            <Dialog.Content direction="rtl" height={"100%"}>
               {title && (
                 <Dialog.Header
                   justifyContent={"center"}
@@ -94,9 +103,28 @@ const Subject = createOverlay<Props>(
                   >
                     <SubjectHeader title={title} resource={resource} />
                   </Presence>
+                  <Dialog.CloseTrigger
+                    top="50%"
+                    transform="translateY(-50%)"
+                    left="2.5%"
+                    right="unset"
+                    asChild
+                  >
+                    <CloseButton
+                      variant={"subtle"}
+                      size={{ base: "sm", md: "md" }}
+                    />
+                  </Dialog.CloseTrigger>
                 </Dialog.Header>
               )}
-              <Dialog.Body spaceY="4" position={"relative"}>
+              <Dialog.Body
+                spaceY="4"
+                position={"relative"}
+                display={"grid"}
+                gridTemplateRows={"auto 1fr"}
+                height={"100%"}
+                overflow={isVertical && type === "image" ? "hidden" : "unset"}
+              >
                 {description && (
                   <Dialog.Description textAlign={"center"} direction={"rtl"}>
                     {description}
@@ -114,6 +142,7 @@ const Subject = createOverlay<Props>(
                   backgroundColor="{colors.bg.panel}"
                   present={subject.loading}
                   zIndex={9999}
+                  unmountOnExit
                 >
                   <Center height={"100%"}>
                     <Spinner size="lg" borderWidth="3px" color={color.value} />

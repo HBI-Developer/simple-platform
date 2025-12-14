@@ -1,4 +1,4 @@
-import { Flex, IconButton, Link } from "@chakra-ui/react";
+import { Flex, IconButton, Link, Show } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { Tooltip } from "../ui/tooltip";
 import { LuDownload, LuExternalLink } from "react-icons/lu";
@@ -83,27 +83,33 @@ export default function SubjectHeader({ title, resource }: Props) {
       transform={"translateY(-50%)"}
       justifyContent={"space-between"}
     >
-      <Tooltip content="إلى المورد" positioning={{ placement: "bottom" }}>
-        <Link
-          href={typeof resource === "string" ? resource : "#"}
-          target={"_blank"}
-          visibility={typeof resource === "string" ? "visible" : "hidden"}
-        >
-          <IconButton variant={"subtle"} size={{ base: "sm", md: "md" }}>
-            <LuExternalLink />
-          </IconButton>
-        </Link>
-      </Tooltip>
-      <Tooltip content="تحميل" positioning={{ placement: "bottom" }}>
-        <IconButton
-          visibility={isDownloadHidden ? "hidden" : "visible"}
-          onClick={onDownload}
-          variant={"subtle"}
-          size={{ base: "sm", md: "md" }}
-        >
-          <LuDownload />
-        </IconButton>
-      </Tooltip>
+      <Show
+        when={typeof resource === "string"}
+        fallback={
+          <Tooltip content="تحميل" positioning={{ placement: "bottom" }}>
+            <IconButton
+              visibility={isDownloadHidden ? "hidden" : "visible"}
+              onClick={onDownload}
+              variant={"subtle"}
+              size={{ base: "sm", md: "md" }}
+            >
+              <LuDownload />
+            </IconButton>
+          </Tooltip>
+        }
+      >
+        <Tooltip content="إلى المورد" positioning={{ placement: "bottom" }}>
+          <Link
+            href={typeof resource === "string" ? resource : "#"}
+            target={"_blank"}
+            visibility={typeof resource === "string" ? "visible" : "hidden"}
+          >
+            <IconButton variant={"subtle"} size={{ base: "sm", md: "md" }}>
+              <LuExternalLink />
+            </IconButton>
+          </Link>
+        </Tooltip>
+      </Show>
     </Flex>
   );
 }
